@@ -1,0 +1,131 @@
+/* ================= HERO RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .hero-badge {
+    font-size: 12px;
+  }
+}
+
+/* ================= SECTION RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .about-image-placeholder {
+    min-height: 300px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .service-card,
+  .contact-card,
+  .portfolio-card {
+    margin-bottom: 20px;
+  }
+
+  .contact-form {
+    padding: 20px;
+  }
+
+  .team-card {
+    margin-bottom: 20px;
+  }
+
+  .testimonial-card {
+    margin-bottom: 20px;
+  }
+
+  /* Studio Tabs Responsive */
+  .studio-tabs {
+    gap: 15px;
+    padding-bottom: 15px;
+  }
+
+  .studio-tab {
+    font-size: 13px;
+    padding-bottom: 6px;
+  }
+
+  .studio-heading {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+
+  .studio-text {
+    font-size: 15px;
+  }
+
+  .studio-video-container {
+    margin-top: 20px;
+  }
+
+  .btn-primary-glow {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .portfolio-image-placeholder {
+    height: 200px;
+  }
+
+  .team-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  /* Studio Tabs - Extra Small */
+  .studio-tabs {
+    gap: 10px;
+    padding-bottom: 12px;
+  }
+
+  .studio-tab {
+    font-size: 12px;
+    padding-bottom: 4px;
+    letter-spacing: 0px;
+  }
+
+  .studio-heading {
+    font-size: 22px;
+  }
+
+  .btn-primary-glow {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
