@@ -1,247 +1,305 @@
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { Mail, Phone, MapPin } from "lucide-react";
 import { useState, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from "react-router-dom";
+import CameraSuccess from "../components/sections/CameraSuccess";
+
 function Contact() {
 
-  const recaptchaRef = useRef(null);
+const recaptchaRef = useRef(null);
 const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    mobileNumber: "",
-    message: "",
-  });
 
-  const [errors, setErrors] = useState({});
-  const [captchaValue, setCaptchaValue] = useState(null);
+const [loading,setLoading] = useState(false);
+const [showSuccess,setShowSuccess] = useState(false);
+const [captchaValue,setCaptchaValue] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+const [formData,setFormData] = useState({
+name:"",
+email:"",
+mobileNumber:"",
+message:""
+});
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+const [errors,setErrors] = useState({});
 
-    setErrors((prev) => ({
-      ...prev,
-      [name]: "",
-    }));
-  };
+const handleChange = (e)=>{
 
-  const validate = () => {
+const {name,value} = e.target;
 
-    let newErrors = {};
+setFormData((prev)=>({
+...prev,
+[name]:value
+}));
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-    else if (!/^[A-Za-z\s]+$/.test(formData.name)) {
-      newErrors.name = "Name should contain only alphabets";
-    }
+setErrors((prev)=>({
+...prev,
+[name]:""
+}));
 
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    }
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
+};
 
-    if (!formData.mobileNumber) {
-      newErrors.mobileNumber = "Mobile number is required";
-    }
-    else if (!/^[0-9]{10}$/.test(formData.mobileNumber)) {
-      newErrors.mobileNumber = "Enter valid 10 digit mobile number";
-    }
+const validate = ()=>{
 
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
-    }
-    else if (formData.message.length < 10) {
-      newErrors.message = "Message must be at least 10 characters";
-    }
+let newErrors = {};
 
-    setErrors(newErrors);
+if(!formData.name.trim()){
+newErrors.name="Name is required";
+}
+else if(!/^[A-Za-z\s]+$/.test(formData.name)){
+newErrors.name="Name should contain only alphabets";
+}
 
-    return Object.keys(newErrors).length === 0;
-  };
+if(!formData.email){
+newErrors.email="Email is required";
+}
+else if(!/\S+@\S+\.\S+/.test(formData.email)){
+newErrors.email="Invalid email format";
+}
 
-  const handleSubmit = async (e) => {
+if(!formData.mobileNumber){
+newErrors.mobileNumber="Mobile number is required";
+}
+else if(!/^[0-9]{10}$/.test(formData.mobileNumber)){
+newErrors.mobileNumber="Enter valid 10 digit mobile number";
+}
 
-    e.preventDefault();
+if(!formData.message.trim()){
+newErrors.message="Message is required";
+}
+else if(formData.message.length<10){
+newErrors.message="Message must be at least 10 characters";
+}
 
-    if (!validate()) return;
+setErrors(newErrors);
 
-    if (!captchaValue) {
-      alert("Please verify the reCAPTCHA");
-      return;
-    }
+return Object.keys(newErrors).length===0;
 
-    try {
+};
 
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbwInDSZ7ANO9r4N8xwKsyMNa0jqptFgui3w0IhLDjzi7Dxx4Gzw9KBUfSqVRku4OaG9wA/exec",
-        {
-          method: "POST",
-          body: JSON.stringify(formData),
-        }
-      );
+const handleSubmit = async (e)=>{
 
-      navigate("/thank-you");
+e.preventDefault();
 
-      setFormData({
-        name: "",
-        email: "",
-        mobileNumber: "",
-        message: "",
-      });
+if(!validate()) return;
 
-      setCaptchaValue(null);
-      recaptchaRef.current.reset();
+if(!captchaValue){
+alert("Please verify reCAPTCHA");
+return;
+}
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+setLoading(true);
 
-  return (
-    <section className="contact-section py-5" id="contact">
-      <Container>
+try{
 
-        <Row className="mb-5">
-          <Col lg={8} className="mx-auto text-center">
-            <h2 className="section-title">Get In Touch</h2>
-            <p className="section-subtitle">
-              Have a question? We'd love to hear from you.
-            </p>
-          </Col>
-        </Row>
+await fetch(
+"https://script.google.com/macros/s/AKfycbwInDSZ7ANO9r4N8xwKsyMNa0jqptFgui3w0IhLDjzi7Dxx4Gzw9KBUfSqVRku4OaG9wA/exec",
+{
+method:"POST",
+body:JSON.stringify(formData)
+}
+);
 
-        <Row>
-          <Col lg={8} className="mx-auto">
+setShowSuccess(true);
 
-            <Form onSubmit={handleSubmit} className="contact-form">
+setFormData({
+name:"",
+email:"",
+mobileNumber:"",
+message:""
+});
 
-              <Row>
+setCaptchaValue(null);
 
-                <Col md={6} className="mb-3">
-                  <Form.Group>
-                    <Form.Label className="text-light">Name</Form.Label>
+if(recaptchaRef.current){
+recaptchaRef.current.reset();
+}
 
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Your name"
-                      className="form-control-dark"
-                      onKeyPress={(e) => {
-                        if (!/[A-Za-z\s]/.test(e.key)) {
-                          e.preventDefault();
-                        }
-                      }}
-                    />
+setTimeout(()=>{
+navigate("/thank-you");
+},4000);
 
-                    {errors.name && (
-                      <small className="text-danger">{errors.name}</small>
-                    )}
+}
+catch(error){
+console.error(error);
+}
 
-                  </Form.Group>
-                </Col>
+setLoading(false);
 
-                <Col md={6} className="mb-3">
-                  <Form.Group>
-                    <Form.Label className="text-light">Email</Form.Label>
+};
 
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Your email"
-                      className="form-control-dark"
-                    />
+return(
+<>
 
-                    {errors.email && (
-                      <small className="text-danger">{errors.email}</small>
-                    )}
+<CameraSuccess show={showSuccess}/>
 
-                  </Form.Group>
-                </Col>
+<section className="contact-section py-5" id="contact">
 
-              </Row>
+<Container>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="text-light">Mobile Number</Form.Label>
+<Row className="mb-5">
+<Col lg={8} className="mx-auto text-center">
+<h2 className="section-title">Get In Touch</h2>
+<p className="section-subtitle">
+Have a question? We'd love to hear from you.
+</p>
+</Col>
+</Row>
 
-                <Form.Control
-                  type="tel"
-                  name="mobileNumber"
-                  value={formData.mobileNumber}
-                  onChange={handleChange}
-                  placeholder="Mobile Number"
-                  maxLength={10}
-                  className="form-control-dark"
-                  onKeyPress={(e) => {
-                    if (!/[0-9]/.test(e.key)) {
-                      e.preventDefault();
-                    }
-                  }}
-                />
+<Row>
+<Col lg={8} className="mx-auto">
 
-                {errors.mobileNumber && (
-                  <small className="text-danger">
-                    {errors.mobileNumber}
-                  </small>
-                )}
+<Form onSubmit={handleSubmit} className="contact-form">
 
-              </Form.Group>
+<Row>
 
-              <Form.Group className="mb-4">
-                <Form.Label className="text-light">Message</Form.Label>
+<Col md={6} className="mb-3">
 
-                <Form.Control
-                  as="textarea"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Your message"
-                  rows={5}
-                  className="form-control-dark"
-                />
+<Form.Group>
 
-                {errors.message && (
-                  <small className="text-danger">{errors.message}</small>
-                )}
+<Form.Label className="text-light">Name</Form.Label>
 
-              </Form.Group>
+<Form.Control
+type="text"
+name="name"
+value={formData.name}
+onChange={handleChange}
+placeholder="Your name"
+className="form-control-dark"
+onKeyPress={(e)=>{
+if(!/[A-Za-z\s]/.test(e.key)){
+e.preventDefault();
+}
+}}
+/>
 
-              {/* reCAPTCHA */}
+{errors.name && (
+<small className="text-danger">{errors.name}</small>
+)}
 
-              <div className="mb-3 text-center">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey="6LdvcYEsAAAAAP3ttcRcoVc09gLamV4gq21wTNSo"
-                  onChange={(value) => setCaptchaValue(value)}
-                />
-              </div>
+</Form.Group>
 
-              <div className="text-center">
-                <Button type="submit" className="btn-gradient">
-                  Send Message
-                </Button>
-              </div>
+</Col>
 
-            </Form>
+<Col md={6} className="mb-3">
 
-          </Col>
-        </Row>
+<Form.Group>
 
-      </Container>
-    </section>
-  );
+<Form.Label className="text-light">Email</Form.Label>
+
+<Form.Control
+type="email"
+name="email"
+value={formData.email}
+onChange={handleChange}
+placeholder="Your email"
+className="form-control-dark"
+/>
+
+{errors.email && (
+<small className="text-danger">{errors.email}</small>
+)}
+
+</Form.Group>
+
+</Col>
+
+</Row>
+
+<Form.Group className="mb-3">
+
+<Form.Label className="text-light">
+Mobile Number
+</Form.Label>
+
+<Form.Control
+type="tel"
+name="mobileNumber"
+value={formData.mobileNumber}
+onChange={handleChange}
+placeholder="Mobile Number"
+maxLength={10}
+className="form-control-dark"
+onKeyPress={(e)=>{
+if(!/[0-9]/.test(e.key)){
+e.preventDefault();
+}
+}}
+/>
+
+{errors.mobileNumber && (
+<small className="text-danger">
+{errors.mobileNumber}
+</small>
+)}
+
+</Form.Group>
+
+<Form.Group className="mb-4">
+
+<Form.Label className="text-light">
+Message
+</Form.Label>
+
+<Form.Control
+as="textarea"
+name="message"
+value={formData.message}
+onChange={handleChange}
+placeholder="Your message"
+rows={5}
+className="form-control-dark"
+/>
+
+{errors.message && (
+<small className="text-danger">{errors.message}</small>
+)}
+
+</Form.Group>
+
+{/* RECAPTCHA */}
+
+<div className="mb-3 text-center">
+
+<ReCAPTCHA
+ref={recaptchaRef}
+sitekey="6LdvcYEsAAAAAP3ttcRcoVc09gLamV4gq21wTNSo"
+onChange={(value)=>setCaptchaValue(value)}
+/>
+
+</div>
+
+<div className="text-center">
+
+<Button
+type="submit"
+className="btn-gradient"
+disabled={loading}
+>
+
+{loading ? (
+<>
+<span className="spinner-border spinner-border-sm me-2"></span>
+Sending...
+</>
+) : (
+"Send Message"
+)}
+
+</Button>
+
+</div>
+
+</Form>
+
+</Col>
+</Row>
+
+</Container>
+
+</section>
+
+</>
+);
 }
 
 export default Contact;

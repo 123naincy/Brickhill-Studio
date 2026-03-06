@@ -782,7 +782,7 @@ h1, h2, h3, h4, .section-title, .hero-title {
 }
 
 .logo-img {
-  height: 4rem;   /* control size */
+  height: 5rem;   /* control size */
   width: auto;
   object-fit: contain;
 }

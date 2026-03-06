@@ -1,6 +1,6 @@
 import { Container, Row, Col } from "react-bootstrap";
 import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react";
-
+import logo from "../../assets/logo.png";
 function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -10,7 +10,9 @@ function Footer() {
         <Row className="py-5">
           {/* Company Info */}
           <Col md={4} className="mb-4 mb-md-0">
-            <h5 className="footer-title">BHL STUDIO</h5>
+
+          <img src={logo} alt="BHL Studioz Logo" className="logo-img" />
+        
             <p className="footer-text">
               Creating amazing digital experiences for businesses worldwide.
             </p>
